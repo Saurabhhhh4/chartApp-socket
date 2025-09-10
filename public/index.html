@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Chart App</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="app">
+      <h1>Chart Bro!!</h1>
+      <canvas id="chart"></canvas>
+    </div>
+    <input type="text" id="messageInput" placeholder="Type a message..." />
+    <button id="sendMessageButton">Send</button>
+    <div id="messages"></div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+      const Send = document.getElementById("sendMessageButton");
+      const messageInput = document.getElementById("messageInput");
+      const messagesDiv = document.getElementById("messages");
+      socket.on("user-message", (message) => {
+        const p = document.createElement("p");
+        p.innerText = message;
+        messagesDiv.appendChild(p);
+      });
+
+      Send.addEventListener("click", () => {
+        const message = messageInput.value;
+        //emit means send to server
+        socket.emit("user-message", message);
+        messageInput.value = "";
+      });
+    </script>
+  </body>
+</html>
